@@ -1,0 +1,128 @@
+<UserControl x:Class="EquipmentInventorySystem.Views.HomePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer Background="{StaticResource ContentBackgroundBrush}"
+                  VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,32,32,32">
+
+            <!-- Page header -->
+            <TextBlock Text="Главная"
+                       Style="{StaticResource PageTitleStyle}"/>
+            <TextBlock Text="Добро пожаловать в систему учёта оборудования."
+                       Style="{StaticResource PageSubtitleStyle}"
+                       Margin="0,4,0,28"/>
+
+            <!-- Stat cards row -->
+            <UniformGrid Rows="1" Columns="4">
+
+                <Border Style="{StaticResource CardStyle}" Margin="0,0,14,0">
+                    <StackPanel>
+                        <TextBlock Text="Оборудование"
+                                   FontSize="12"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock x:Name="CountEquipment"
+                                   Text="—"
+                                   Style="{StaticResource StatNumberStyle}"/>
+                        <TextBlock Text="единиц в реестре"
+                                   FontSize="11"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource CardStyle}" Margin="0,0,14,0">
+                    <StackPanel>
+                        <TextBlock Text="Сотрудники"
+                                   FontSize="12"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock x:Name="CountEmployees"
+                                   Text="—"
+                                   Style="{StaticResource StatNumberStyle}"/>
+                        <TextBlock Text="ответственных лиц"
+                                   FontSize="11"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource CardStyle}" Margin="0,0,14,0">
+                    <StackPanel>
+                        <TextBlock Text="Помещения"
+                                   FontSize="12"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock x:Name="CountRooms"
+                                   Text="—"
+                                   Style="{StaticResource StatNumberStyle}"/>
+                        <TextBlock Text="помещений учтено"
+                                   FontSize="11"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource CardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Инвентаризации"
+                                   FontSize="12"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock x:Name="CountChecks"
+                                   Text="—"
+                                   Style="{StaticResource StatNumberStyle}"/>
+                        <TextBlock Text="проверок проведено"
+                                   FontSize="11"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
+
+            </UniformGrid>
+
+            <!-- Description card -->
+            <Border Style="{StaticResource CardStyle}" Margin="0,20,0,0">
+                <StackPanel>
+                    <TextBlock Text="О системе"
+                               FontSize="15"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               Margin="0,0,0,10"/>
+                    <TextBlock TextWrapping="Wrap"
+                               FontSize="13"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               LineHeight="22">
+                        Система предназначена для ведения учёта оборудования на предприятии.
+                        Она позволяет регистрировать единицы оборудования, назначать их
+                        ответственным сотрудникам и помещениям, проводить инвентаризации,
+                        а также отслеживать историю перемещений.
+                    </TextBlock>
+
+                    <Separator Margin="0,16"/>
+
+                    <UniformGrid Rows="1" Columns="2">
+                        <StackPanel Margin="0,0,16,0">
+                            <TextBlock Text="Основные разделы"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,8"/>
+                            <TextBlock Text="• Оборудование — реестр всех единиц"
+                                       FontSize="12" Margin="0,2" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Text="• Сотрудники — список ответственных лиц"
+                                       FontSize="12" Margin="0,2" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Text="• Помещения — структура размещения"
+                                       FontSize="12" Margin="0,2" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Учётные операции"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,8"/>
+                            <TextBlock Text="• Инвентаризации — плановые проверки"
+                                       FontSize="12" Margin="0,2" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Text="• История перемещений — аудит движения"
+                                       FontSize="12" Margin="0,2" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            <TextBlock Text="• Отчёты — сводные данные и экспорт"
+                                       FontSize="12" Margin="0,2" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        </StackPanel>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

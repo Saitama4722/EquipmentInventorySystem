@@ -1,0 +1,418 @@
+<UserControl x:Class="EquipmentInventorySystem.Views.ReportsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="900">
+
+    <UserControl.Resources>
+        <Style x:Key="ReportNavStyle" TargetType="RadioButton">
+            <Setter Property="Foreground"  Value="#616161"/>
+            <Setter Property="FontSize"    Value="13"/>
+            <Setter Property="FontFamily"  Value="Segoe UI"/>
+            <Setter Property="Height"      Value="40"/>
+            <Setter Property="Cursor"      Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Root" Background="Transparent" CornerRadius="4" Margin="8,1">
+                            <Grid>
+                                <Rectangle x:Name="Indicator" Width="3" HorizontalAlignment="Left"
+                                           Fill="#1565C0" RadiusX="2" RadiusY="2" Visibility="Hidden"/>
+                                <TextBlock x:Name="Label"
+                                           Text="{TemplateBinding Content}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           Margin="16,0,8,0"
+                                           VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root"  Property="Background" Value="#EEF2F8"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Root"      Property="Background" Value="#E3F2FD"/>
+                                <Setter TargetName="Indicator" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="Label"     Property="Foreground" Value="#1565C0"/>
+                                <Setter TargetName="Label"     Property="FontWeight" Value="SemiBold"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="190"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ══ Left panel: report selector ══ -->
+        <Border Grid.Column="0"
+                Background="White"
+                BorderBrush="#E0E0E0"
+                BorderThickness="0,0,1,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="ТИП ОТЧЁТА"
+                           FontSize="10.5"
+                           FontWeight="SemiBold"
+                           Foreground="#9E9E9E"
+                           FontFamily="Segoe UI"
+                           Margin="16,20,0,10"/>
+
+                <StackPanel Grid.Row="1" Margin="0,4,0,0">
+                    <RadioButton x:Name="BtnAllEquipment"
+                                 Content="Всё оборудование"
+                                 GroupName="ReportType"
+                                 IsChecked="True"
+                                 Style="{StaticResource ReportNavStyle}"
+                                 Tag="AllEquipment"
+                                 Checked="ReportButton_Checked"/>
+
+                    <RadioButton x:Name="BtnRooms"
+                                 Content="По помещениям"
+                                 GroupName="ReportType"
+                                 Style="{StaticResource ReportNavStyle}"
+                                 Tag="Rooms"
+                                 Checked="ReportButton_Checked"/>
+
+                    <RadioButton x:Name="BtnEmployees"
+                                 Content="По сотрудникам"
+                                 GroupName="ReportType"
+                                 Style="{StaticResource ReportNavStyle}"
+                                 Tag="Employees"
+                                 Checked="ReportButton_Checked"/>
+
+                    <RadioButton x:Name="BtnInventory"
+                                 Content="Инвентаризации"
+                                 GroupName="ReportType"
+                                 Style="{StaticResource ReportNavStyle}"
+                                 Tag="InventoryChecks"
+                                 Checked="ReportButton_Checked"/>
+                </StackPanel>
+
+                <Button Grid.Row="2"
+                        Content="Экспорт в CSV"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Margin="12,0,12,20"
+                        HorizontalAlignment="Stretch"
+                        Click="BtnExport_Click"/>
+            </Grid>
+        </Border>
+
+        <!-- ══ Right content area ══ -->
+        <Grid Grid.Column="1" Background="{StaticResource ContentBackgroundBrush}">
+
+            <!-- ── 1. All Equipment ── -->
+            <Grid x:Name="PanelAllEquipment" Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="0,0,0,14">
+                    <TextBlock Text="Всё оборудование"
+                               Style="{StaticResource PageTitleStyle}"/>
+                    <TextBlock x:Name="TxtAllEquipmentCount"
+                               Style="{StaticResource PageSubtitleStyle}"
+                               Margin="0,4,0,0"/>
+                </StackPanel>
+
+                <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="0">
+                    <Grid>
+                        <TextBlock x:Name="TxtNoEquipment"
+                                   Text="Нет данных"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="14"
+                                   Foreground="#9E9E9E"
+                                   FontFamily="Segoe UI"
+                                   Visibility="Collapsed"/>
+                        <DataGrid x:Name="GridAllEquipment"
+                                  ItemsSource="{Binding AllEquipmentRows}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  CanUserAddRows="False"
+                                  ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+                                  RowStyle="{StaticResource DataGridRowStyle}"
+                                  GridLinesVisibility="Horizontal"
+                                  HorizontalGridLinesBrush="#EEEEEE"
+                                  BorderThickness="0"
+                                  SelectionMode="Single"
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Наименование"
+                                                    Binding="{Binding Name}"
+                                                    Width="*"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                                <DataGridTextColumn Header="Инв. номер"
+                                                    Binding="{Binding InventoryNumber}"
+                                                    Width="120"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                                <DataGridTextColumn Header="Серийный №"
+                                                    Binding="{Binding SerialNumber}"
+                                                    Width="120"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                                <DataGridTextColumn Header="Статус"
+                                                    Binding="{Binding StatusDisplay}"
+                                                    Width="110"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                                <DataGridTextColumn Header="Помещение"
+                                                    Binding="{Binding RoomDisplay}"
+                                                    Width="160"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                                <DataGridTextColumn Header="Сотрудник"
+                                                    Binding="{Binding EmployeeDisplay}"
+                                                    Width="170"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- ── 2. Rooms ── -->
+            <Grid x:Name="PanelRooms" Margin="20" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="0,0,0,14">
+                    <TextBlock Text="Отчёт по помещениям"
+                               Style="{StaticResource PageTitleStyle}"/>
+                    <TextBlock x:Name="TxtRoomsCount"
+                               Style="{StaticResource PageSubtitleStyle}"
+                               Margin="0,4,0,0"/>
+                </StackPanel>
+
+                <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="0">
+                    <Grid>
+                        <TextBlock x:Name="TxtNoRooms"
+                                   Text="Нет данных"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="14"
+                                   Foreground="#9E9E9E"
+                                   FontFamily="Segoe UI"
+                                   Visibility="Collapsed"/>
+                        <DataGrid x:Name="GridRooms"
+                                  ItemsSource="{Binding RoomRows}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  CanUserAddRows="False"
+                                  ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+                                  RowStyle="{StaticResource DataGridRowStyle}"
+                                  GridLinesVisibility="Horizontal"
+                                  HorizontalGridLinesBrush="#EEEEEE"
+                                  BorderThickness="0"
+                                  SelectionMode="Single"
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Номер"
+                                                    Binding="{Binding Number}"
+                                                    Width="80"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                                <DataGridTextColumn Header="Наименование"
+                                                    Binding="{Binding Name}"
+                                                    Width="*"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                                <DataGridTextColumn Header="Описание"
+                                                    Binding="{Binding Description}"
+                                                    Width="220"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                                <DataGridTextColumn Header="Кол-во оборудования"
+                                                    Binding="{Binding EquipmentCount}"
+                                                    Width="160"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- ── 3. Employees ── -->
+            <Grid x:Name="PanelEmployees" Margin="20" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="0,0,0,14">
+                    <TextBlock Text="Отчёт по сотрудникам"
+                               Style="{StaticResource PageTitleStyle}"/>
+                    <TextBlock x:Name="TxtEmployeesCount"
+                               Style="{StaticResource PageSubtitleStyle}"
+                               Margin="0,4,0,0"/>
+                </StackPanel>
+
+                <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="0">
+                    <Grid>
+                        <TextBlock x:Name="TxtNoEmployees"
+                                   Text="Нет данных"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="14"
+                                   Foreground="#9E9E9E"
+                                   FontFamily="Segoe UI"
+                                   Visibility="Collapsed"/>
+                        <DataGrid x:Name="GridEmployees"
+                                  ItemsSource="{Binding EmployeeRows}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  CanUserAddRows="False"
+                                  ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+                                  RowStyle="{StaticResource DataGridRowStyle}"
+                                  GridLinesVisibility="Horizontal"
+                                  HorizontalGridLinesBrush="#EEEEEE"
+                                  BorderThickness="0"
+                                  SelectionMode="Single"
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ФИО"
+                                                    Binding="{Binding FullName}"
+                                                    Width="*"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                                <DataGridTextColumn Header="Должность"
+                                                    Binding="{Binding Position}"
+                                                    Width="180"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                                <DataGridTextColumn Header="Отдел"
+                                                    Binding="{Binding Department}"
+                                                    Width="180"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                                <DataGridTextColumn Header="Кол-во оборудования"
+                                                    Binding="{Binding EquipmentCount}"
+                                                    Width="160"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- ── 4. Inventory Check Results ── -->
+            <Grid x:Name="PanelInventory" Margin="20" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="0,0,0,14">
+                    <TextBlock Text="Результаты инвентаризаций"
+                               Style="{StaticResource PageTitleStyle}"/>
+                    <TextBlock x:Name="TxtInventoryCount"
+                               Style="{StaticResource PageSubtitleStyle}"
+                               Margin="0,4,0,0"/>
+                </StackPanel>
+
+                <!-- Check selector card -->
+                <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,12">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Инвентаризация:"
+                                   VerticalAlignment="Center"
+                                   FontSize="13"
+                                   FontFamily="Segoe UI"
+                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                   Margin="0,0,12,0"/>
+                        <ComboBox x:Name="ComboChecks"
+                                  Style="{StaticResource FormComboBoxStyle}"
+                                  Width="320"
+                                  ItemsSource="{Binding InventoryChecks}"
+                                  SelectionChanged="ComboChecks_SelectionChanged">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <Run Text="{Binding CheckDateDisplay, Mode=OneWay}"/>
+                                        <Run Text=" — "/>
+                                        <Run Text="{Binding ResponsibleEmployee}"/>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <TextBlock x:Name="TxtCheckInfo"
+                                   Margin="16,0,0,0"
+                                   VerticalAlignment="Center"
+                                   FontSize="12.5"
+                                   FontFamily="Segoe UI"
+                                   Foreground="#616161"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Items grid -->
+                <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="0">
+                    <Grid>
+                        <TextBlock x:Name="TxtNoCheckSelected"
+                                   Text="Выберите инвентаризацию для просмотра результатов"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="14"
+                                   Foreground="#9E9E9E"
+                                   FontFamily="Segoe UI"/>
+                        <TextBlock x:Name="TxtCheckNoItems"
+                                   Text="В данной инвентаризации нет позиций"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="14"
+                                   Foreground="#9E9E9E"
+                                   FontFamily="Segoe UI"
+                                   Visibility="Collapsed"/>
+                        <DataGrid x:Name="GridCheckItems"
+                                  ItemsSource="{Binding CheckItems}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  CanUserAddRows="False"
+                                  ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+                                  RowStyle="{StaticResource DataGridRowStyle}"
+                                  GridLinesVisibility="Horizontal"
+                                  HorizontalGridLinesBrush="#EEEEEE"
+                                  BorderThickness="0"
+                                  SelectionMode="Single"
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                  Visibility="Collapsed">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Наименование"
+                                                    Binding="{Binding EquipmentName}"
+                                                    Width="*"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                                <DataGridTextColumn Header="Инв. номер"
+                                                    Binding="{Binding InventoryNumber}"
+                                                    Width="120"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                                <DataGridTextColumn Header="Результат"
+                                                    Binding="{Binding ResultStatusDisplay}"
+                                                    Width="120"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                                <DataGridTextColumn Header="Помещение"
+                                                    Binding="{Binding RoomDisplay}"
+                                                    Width="150"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                                <DataGridTextColumn Header="Сотрудник"
+                                                    Binding="{Binding EmployeeDisplay}"
+                                                    Width="150"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                                <DataGridTextColumn Header="Примечание"
+                                                    Binding="{Binding Comment}"
+                                                    Width="150"
+                                                    ElementStyle="{StaticResource CellTextStyle}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+            </Grid>
+
+        </Grid>
+    </Grid>
+</UserControl>

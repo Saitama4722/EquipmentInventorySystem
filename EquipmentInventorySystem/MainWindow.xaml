@@ -1,0 +1,107 @@
+<Window x:Class="EquipmentInventorySystem.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Система учёта оборудования"
+        Height="620" Width="1000"
+        MinHeight="500" MinWidth="800"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="52"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ══ Header ══ -->
+        <Border Grid.Row="0" Grid.Column="0"
+                Background="{StaticResource SidebarBackgroundBrush}">
+            <TextBlock Text="ЭУО"
+                       Foreground="White"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       FontFamily="Segoe UI"
+                       VerticalAlignment="Center"
+                       Margin="22,0,0,0"/>
+        </Border>
+
+        <Border Grid.Row="0" Grid.Column="1"
+                Background="{StaticResource HeaderBackgroundBrush}">
+            <TextBlock Text="Система учёта оборудования"
+                       Foreground="White"
+                       FontSize="15"
+                       FontWeight="SemiBold"
+                       FontFamily="Segoe UI"
+                       VerticalAlignment="Center"
+                       Margin="24,0,0,0"/>
+        </Border>
+
+        <!-- ══ Sidebar ══ -->
+        <Border Grid.Row="1" Grid.Column="0"
+                Background="{StaticResource SidebarBackgroundBrush}">
+            <StackPanel Margin="0,12,0,0">
+
+                <RadioButton x:Name="NavHome"
+                             Content="Главная"
+                             Style="{StaticResource NavButtonStyle}"
+                             IsChecked="True"
+                             Checked="NavButton_Checked"
+                             Tag="Home"/>
+
+                <Separator Style="{StaticResource SidebarSeparatorStyle}"/>
+
+                <RadioButton x:Name="NavEquipment"
+                             Content="Оборудование"
+                             Style="{StaticResource NavButtonStyle}"
+                             Checked="NavButton_Checked"
+                             Tag="Equipment"/>
+
+                <RadioButton x:Name="NavEmployees"
+                             Content="Сотрудники"
+                             Style="{StaticResource NavButtonStyle}"
+                             Checked="NavButton_Checked"
+                             Tag="Employees"/>
+
+                <RadioButton x:Name="NavRooms"
+                             Content="Помещения"
+                             Style="{StaticResource NavButtonStyle}"
+                             Checked="NavButton_Checked"
+                             Tag="Rooms"/>
+
+                <Separator Style="{StaticResource SidebarSeparatorStyle}"/>
+
+                <RadioButton x:Name="NavInventory"
+                             Content="Инвентаризации"
+                             Style="{StaticResource NavButtonStyle}"
+                             Checked="NavButton_Checked"
+                             Tag="InventoryChecks"/>
+
+                <RadioButton x:Name="NavMovement"
+                             Content="История перемещений"
+                             Style="{StaticResource NavButtonStyle}"
+                             Checked="NavButton_Checked"
+                             Tag="MovementHistory"/>
+
+                <Separator Style="{StaticResource SidebarSeparatorStyle}"/>
+
+                <RadioButton x:Name="NavReports"
+                             Content="Отчёты"
+                             Style="{StaticResource NavButtonStyle}"
+                             Checked="NavButton_Checked"
+                             Tag="Reports"/>
+
+            </StackPanel>
+        </Border>
+
+        <!-- ══ Content area ══ -->
+        <ContentControl x:Name="ContentArea"
+                        Grid.Row="1" Grid.Column="1"
+                        Content="{Binding CurrentView}"/>
+    </Grid>
+</Window>

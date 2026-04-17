@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Data\Scripts\init.sql" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Data\Scripts\seed.sql" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
